@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IEEE Member Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: white;
+    }
+    header {
+      background: blue;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    nav {
+      background: white;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: black;
+      text-decoration: none;
+      padding: 15px 20px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      background: white;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+    }
+    button {
+      background: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: blue;
+    }
+    #dashboard {
+      display: none;
+    }
+    .content {
+      padding: 20px;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      nav a {
+        flex: 1 1 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>IEEE Member Portal</h1>
+  </header>
+
+  <div class="container" id="loginSection">
+    <h2>Login</h2>
+    <input type="text" id="ieeeId" placeholder="IEEE ID" required />
+    <input type="email" id="gmailId" placeholder="Gmail ID" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="dashboard">
+    <nav>
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('about')">About Us</a>
+      <a href="#" onclick="showPage('team')">Team</a>
+      <a href="#" onclick="showPage('achievements')">Achievements</a>
+      <a href="#" onclick="showPage('publications')">Publications</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <div class="content" id="home">
+      <h2>Welcome to IEEE</h2>
+      <p>Empowering innovation and excellence in engineering and technology.</p>
+    </div>
+    <div class="content" id="about" style="display:none">
+      <h2>About Us</h2>
+      <p>IEEE is the world's largest technical professional organization dedicated to advancing technology for the benefit of humanity.</p>
+    </div>
+    <div class="content" id="team" style="display:none">
+      <h2>Our Team</h2>
+      <p>Meet the passionate engineers and leaders driving IEEE initiatives forward.</p>
+    </div>
+    <div class="content" id="achievements" style="display:none">
+      <h2>Achievements</h2>
+      <p>Celebrating milestones in research, innovation, and community impact.</p>
+    </div>
+    <div class="content" id="publications" style="display:none">
+      <h2>Publications</h2>
+      <p>Explore cutting-edge journals, conference papers, and technical magazines.</p>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const ieeeId = document.getElementById("ieeeId").value;
+      const gmailId = document.getElementById("gmailId").value;
+      const password = document.getElementById("password").value;
+
+      if (ieeeId && gmailId && password) {
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        showPage('home');
+      } else {
+        alert("Please fill in all fields.");
+      }
+    }
+
+    function logout() {
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("loginSection").style.display = "block";
+      document.getElementById("ieeeId").value = "";
+      document.getElementById("gmailId").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    function showPage(pageId) {
+      const pages = ['home', 'about', 'team', 'achievements', 'publications'];
+      pages.forEach(id => {
+        document.getElementById(id).style.display = id === pageId ? 'block' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
