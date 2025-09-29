@@ -1,0 +1,134 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1" /> <title>IEEE Student Branch Portal</title> <style> body { font-family: Arial, sans-serif; background: white; margin: 0; padding: 0; color: black; }
+
+/* Container */
+.container {
+max-width: 900px;
+margin: 40px auto;
+background: white;
+border-radius: 10px;
+box-shadow: 0 0 12px;
+padding: 20px;
+}
+
+h2 {
+color: black;
+font-family: 'Georgia', serif;
+}
+
+/* Login Form Styles */
+form {
+max-width: 400px;
+margin: 0 auto;
+background: white;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 0 6px;
+}
+
+label {
+display: block;
+margin-bottom: 6px;
+font-weight: 600;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="file"] {
+width: 100%;
+padding: 8px;
+margin-bottom: 14px;
+border-radius: 6px;
+border: 1px solid #a79d8f;
+box-sizing: border-box;
+}
+
+button {
+background-color: white;
+color: white;
+font-weight: bold;
+border: none;
+padding: 10px 16px;
+border-radius: 6px;
+cursor: pointer;
+}
+
+button:hover {
+background-color: white;
+}
+
+/* Navigation Menu */
+nav {
+background: white;
+padding: 10px 20px;
+border-radius: 10px 10px 0 0;
+box-shadow: inset 0px -3px 8px #6b5e41;
+}
+nav ul {
+list-style: none;
+display: flex;
+gap: 25px;
+margin: 0;
+padding: 0;
+}
+nav ul li {
+cursor: pointer;
+font-weight: 700;
+color: white;
+}
+nav ul li.active, nav ul li:hover {
+text-decoration: underline;
+}
+
+/* Content Area */
+.content {
+background: white;
+border-radius: 0 10px 10px 10px;
+padding: 20px;
+min-height: 360px;
+box-sizing: border-box;
+color: #617153;
+}
+
+/* Event Upload Form */
+.upload-form {
+max-width: 500px;
+}
+
+.upload-list {
+margin-top: 20px;
+background: white;
+border-radius: 8px;
+max-width: 500px;
+padding: 10px;
+}
+.upload-list ul {
+padding-left: 20px;
+}
+.upload-list li {
+margin-bottom: 10px;
+}
+
+/* Success/Error message */
+.msg {
+margin-top: 12px;
+font-weight: 600;
+}
+.msg.success {
+color: green;
+}
+.msg.error {
+color: darkred;
+}
+</style>
+
+</head> <body>
+<form id="login-form" autocomplete="off">
+  <label for="ieeeId">IEEE ID</label>
+  <input type="text" id="ieeeId" name="ieeeId" required placeholder="Enter your IEEE ID" />
+  
+  <label for="gmailId">Gmail ID</label>
+  <input type="email" id="gmailId" name="gmailId" required placeholder="Enter your Gmail ID" />
+  
+  <label for="password">Password</label>
+  <input type="password" id="password" name="password" required placeholder="Enter your password" />
+  
+  <button type="submit">Login</button>
+<div class="container" id="main-container" style="display:none;"> <nav aria-label="Main Navigation"> <ul id="menu"> <li class="active" data-page="home" tabindex="0">Home</li> <li data-page="aboutus" tabindex="0">About Us</li> <li data-page="team" tabindex="0">Team</li> <li data-page="achievements" tabindex="0">Achievements</li> <li data-page="publications" tabindex="0">Publications</li> <li id="logout-btn" style="margin-left:auto; cursor:pointer;" tabindex="0" aria-label="Logout">Logout</li> </ul> </nav> <div class="content" id="content-area"> <!-- Home page content will be loaded here --> </div> </div> <script> // Simulated user data for demo (in practice, server auth required) const demoUser = { ieeeId: "IEEE12345", gmailId: "student@gmail.com", password: "password123" }; // Elements const loginContainer = document.getElementById("login-container"); const mainContainer = document.getElementById("main-container"); const loginForm = document.getElementById("login-form"); const loginMsg = document.getElementById("login-msg"); const menu = document.getElementById("menu"); const contentArea = document.getElementById("content-area"); const logoutBtn = document.getElementById("logout-btn"); // Storage key for logged in state (demo only) const STORAGE_KEY = "ieeeStudentBranchLoggedIn"; // Check if logged in on page load and show appropriate screen window.onload = () => { if (localStorage.getItem(STORAGE_KEY) === "true") { showMainPage(); } }; // Login form submit handler loginForm.onsubmit = e => { e.preventDefault(); const ieeeId = e.target.ieeeId.value.trim(); const gmailId = e.target.gmailId.value.trim(); const password = e.target.password.value; if ( ieeeId === demoUser.ieeeId && gmailId.toLowerCase() === demoUser.gmailId.toLowerCase() && password === demoUser.password ) { loginMsg.textContent = ""; loginSuccess(); } else { loginMsg.textContent = "Invalid credentials. Please try again."; loginMsg.className = "msg error"; } }; // On successful login function loginSuccess() { localStorage.setItem(STORAGE_KEY, "true"); showMainPage(); } // Show main portal page after login function showMainPage() { loginContainer.style.display = "none"; mainContainer.style.display = "block"; loadPage("home"); } // Handle menu click menu.addEventListener("click", e => { if (e.target.tagName === "LI" && e.target.dataset.page) { loadPage(e.target.dataset.page); setActiveMenu(e.target); } if (e.target.id === "logout-btn") { logout(); } }); // Keyboard accessible for menu (Enter key) menu.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "LI") { if (e.target.dataset.page) { loadPage(e.target.dataset.page); setActiveMenu(e.target); } if (e.target.id === "logout-btn") { logout(); } } }); // Set active menu item function setActiveMenu(activeItem) { [...menu.children].forEach(li => li.classList.remove("active")); activeItem.classList.add("active"); } // Logout function function logout() { localStorage.removeItem(STORAGE_KEY); mainContainer.style.display = "none"; loginContainer.style.display = "block"; loginForm.reset(); loginMsg.textContent = ""; } // Load page content depending on menu function loadPage(page) { switch (page) { case "home": contentArea.innerHTML = getHomePageContent(); addUploadFormListener(); break; case "aboutus": contentArea.innerHTML = ` <h2>About Us</h2> <p>Welcome to the IEEE Student Branch at SMVITM. We aim to empower students through technology and activities.</p> `; break; case "team": contentArea.innerHTML = ` <h2>Team</h2> <ul> <li>Branch Chair: John Doe</li> <li>Vice Chair: Jane Smith</li> <li>Secretary: Alice Johnson</li> <li>Treasurer: Bob Lee</li> </ul> `; break; case "achievements": contentArea.innerHTML = ` <h2>Achievements</h2> <ul> <li>Won Best Student Branch Award 2024</li> <li>Conducted 15+ workshops on AI & Robotics</li> <li>Organized national level hackathons</li> </ul> `; break; case "publications": contentArea.innerHTML = ` <h2>Publications</h2> <ul> <li><a href="#">IEEE Newsletter - Jan 2025</a></li> <li><a href="#">Research Journal Vol 12</a></li> <li><a href="#">Event Reports and Highlights</a></li> </ul> `; break; default: contentArea.textContent = ""; break; } } // Get Home page upload form HTML function getHomePageContent() { return ` <h2>Upload Event Details</h2> <p>Only office bearers can upload event information here.</p> <form id="upload-form" class="upload-form"> <label for="eventName">Event Name</label> <input type="text" id="eventName" name="eventName" required placeholder="Enter event name" /> <label for="eventDate">Event Date</label> <input type="date" id="eventDate" name="eventDate" required /> <label for="eventVenue">Venue</label> <input type="text" id="eventVenue" name="eventVenue" required placeholder="Enter venue" /> <label for="eventPhotos">Upload Photos</label> <input type="file" id="eventPhotos" name="eventPhotos" accept="image/*" multiple required /> <button type="submit">Upload Event</button> <div id="upload-msg" class="msg"></div> </form> <div class="upload-list" id="uploaded-events"> <h3>Uploaded Events</h3> <ul id="event-list"></ul> </div> `; } // Add listener for upload form submissions function addUploadFormListener() { const uploadForm = document.getElementById("upload-form"); const uploadMsg = document.getElementById("upload-msg"); const eventList = document.getElementById("event-list"); // Load existing events from session (for demo) let uploadedEvents = JSON.parse(sessionStorage.getItem("uploadedEvents") || "[]"); renderEvents(uploadedEvents, eventList); uploadForm.addEventListener("submit", function(e) { e.preventDefault(); const formData = new FormData(uploadForm); const eventName = formData.get("eventName").trim(); const eventDate = formData.get("eventDate"); const eventVenue = formData.get("eventVenue").trim(); const photos = formData.getAll("eventPhotos"); if (!eventName || !eventDate || !eventVenue || photos.length === 0) { uploadMsg.textContent = "Please fill in all fields and select photos."; uploadMsg.className = "msg error"; return; } // For demo: just save metadata & show filenames (Photos not uploaded to server) const event = { name: eventName, date: eventDate, venue: eventVenue, photos: photos.map(file => file.name) }; uploadedEvents.push(event); sessionStorage.setItem("uploadedEvents", JSON.stringify(uploadedEvents)); uploadMsg.textContent = "Event uploaded successfully!"; uploadMsg.className = "msg success"; uploadForm.reset(); renderEvents(uploadedEvents, eventList); }); } // Render list of uploaded events function renderEvents(events, container) { if (events.length === 0) { container.innerHTML = "<li>No events uploaded yet.</li>"; return; } container.innerHTML = ""; events.forEach((ev, idx) => { const li = document.createElement("li"); li.innerHTML = ` <strong>${ev.name}</strong><br/> Date: ${ev.date}<br/> Venue: ${ev.venue}<br/> Photos: ${ev.photos.join(", ")} `; container.appendChild(li); }); } </script> </body> </html> ```
